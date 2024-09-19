@@ -1,0 +1,8 @@
+# Ignore build files
+*.o
+*.a
+*.hex
+
+# Ignore temporary files
+*.temp
+*.swp
