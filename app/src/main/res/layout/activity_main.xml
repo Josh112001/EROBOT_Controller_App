@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    tools:context="MainActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/cghs1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="10dp"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/cghe1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="10dp"/>
+
+    <Button
+        android:id="@+id/forward_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_marginTop="150dp"
+        android:background="@drawable/square"
+        android:text="forward"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="@+id/cghs1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/reverse_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/square"
+        android:text="reverse"
+        app:layout_constraintStart_toStartOf="@+id/cghs1"
+        app:layout_constraintTop_toBottomOf="@+id/forward_btn" />
+
+    <Button
+        android:id="@+id/servo4_minus"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="36dp"
+        android:background="@drawable/square"
+        android:text="-"
+        android:layout_marginEnd="120dp"
+        app:layout_constraintBottom_toBottomOf="@+id/reverse_btn"
+        app:layout_constraintEnd_toStartOf="@+id/forward_right_btn"
+        app:layout_constraintStart_toEndOf="@+id/reverse_btn"
+        app:layout_constraintTop_toTopOf="@+id/reverse_btn" />
+
+    <Button
+        android:id="@+id/servo4_plus"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="120dp"
+        android:background="@drawable/square"
+        android:text="+"
+        app:layout_constraintBottom_toBottomOf="@+id/servo4_minus"
+        app:layout_constraintEnd_toStartOf="@+id/forward_right_btn"
+        app:layout_constraintStart_toEndOf="@+id/servo4_minus"
+        app:layout_constraintTop_toTopOf="@+id/servo4_minus" />
+
+    <Button
+        android:id="@+id/servo3_minus"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="120dp"
+        android:background="@drawable/square"
+        android:text="-"
+        app:layout_constraintBottom_toTopOf="@+id/reverse_btn"
+        app:layout_constraintEnd_toStartOf="@+id/forward_right_btn"
+        app:layout_constraintStart_toEndOf="@+id/reverse_btn"
+        app:layout_constraintTop_toTopOf="@+id/reverse_btn" />
+
+    <Button
+        android:id="@+id/servo3_plus"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="120dp"
+        android:background="@drawable/square"
+        android:text="+"
+        app:layout_constraintBottom_toBottomOf="@+id/servo3_minus"
+        app:layout_constraintEnd_toStartOf="@+id/forward_right_btn"
+        app:layout_constraintStart_toEndOf="@+id/servo4_minus"
+        app:layout_constraintTop_toTopOf="@+id/servo3_minus" />
+
+    <Button
+        android:id="@+id/servo2_minus"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="120dp"
+        android:background="@drawable/square"
+        android:text="-"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/servo3_minus"
+        app:layout_constraintEnd_toStartOf="@+id/forward_right_btn"
+        app:layout_constraintStart_toEndOf="@+id/reverse_btn"/>
+
+    <Button
+        android:id="@+id/servo2_plus"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="120dp"
+        android:background="@drawable/square"
+        android:text="+"
+        app:layout_constraintBottom_toBottomOf="@+id/servo2_minus"
+        app:layout_constraintEnd_toStartOf="@+id/forward_right_btn"
+        app:layout_constraintStart_toEndOf="@+id/servo4_minus"
+        app:layout_constraintTop_toTopOf="@+id/servo2_minus" />
+
+    <Button
+        android:id="@+id/servo1_minus"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="120dp"
+        android:background="@drawable/square"
+        android:text="-"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/servo2_minus"
+        app:layout_constraintEnd_toStartOf="@+id/forward_right_btn"
+        app:layout_constraintStart_toEndOf="@+id/reverse_btn"/>
+
+    <Button
+        android:id="@+id/servo1_plus"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="120dp"
+        android:background="@drawable/square"
+        android:text="+"
+        app:layout_constraintBottom_toBottomOf="@+id/servo1_minus"
+        app:layout_constraintEnd_toStartOf="@+id/forward_right_btn"
+        app:layout_constraintStart_toEndOf="@+id/servo4_minus"
+        app:layout_constraintTop_toTopOf="@+id/servo1_minus" />
+
+    <Button
+        android:id="@+id/forward_right_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/square"
+        android:text="RIGHT"
+        app:layout_constraintBottom_toBottomOf="@+id/forward_left_btn"
+        app:layout_constraintEnd_toStartOf="@+id/forward_left_btn"
+        app:layout_constraintTop_toTopOf="@+id/forward_left_btn" />
+
+    <Button
+        android:id="@+id/forward_left_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/square"
+        android:text="LEFT"
+        app:layout_constraintEnd_toStartOf="@+id/cghe1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/bluetooth_connect_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/square"
+        android:text="B"
+        app:layout_constraintStart_toStartOf="@+id/cghs1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/macAddressEditText"
+        android:layout_width="500dp"
+        android:layout_height="60dp"
+        android:background="@android:drawable/edit_text"
+        android:contentDescription="Bluetooth MAC Address input field"
+        android:ems="10"
+        android:hint="Type Bluetooth MAC Address"
+        android:importantForAccessibility="yes"
+        android:inputType="text"
+        android:maxLines="1"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="20dp"
+        android:padding="12dp"
+        android:textColor="#000000"
+        android:textColorHint="#808080"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/bluetooth_connect_btn"
+        app:layout_constraintStart_toEndOf="@+id/bluetooth_connect_btn"
+        app:layout_constraintTop_toTopOf="@+id/bluetooth_connect_btn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
