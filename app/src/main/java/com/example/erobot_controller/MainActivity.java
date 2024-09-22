@@ -1,11 +1,14 @@
 package com.example.erobot_controller;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -24,10 +31,13 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
     String DEVICE_ADDRESS; //MAC Address of Bluetooth Module
     private final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+    private static final int BLUETOOTH_PERMISSION_REQUEST_CODE = 1001;
+    private ActivityResultLauncher<Intent> enableBluetoothLauncher;
 
     private BluetoothDevice device;
     private BluetoothSocket socket;
     private OutputStream outputStream;
+    private BluetoothAdapter bluetoothAdapter;
 
     Button forward_btn, forward_left_btn, forward_right_btn, reverse_btn, bluetooth_connect_btn;
     Button servo4_minus, servo4_plus, servo3_minus, servo3_plus, servo2_minus, servo2_plus, servo1_minus, servo1_plus;
@@ -35,13 +45,13 @@ public class MainActivity extends AppCompatActivity {
 
     String command; //string variable that will store value to be transmitted to the bluetooth module
 
+    @RequiresApi(api = Build.VERSION_CODES.S)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //declaration of button variables
         forward_btn = (Button) findViewById(R.id.forward_btn);
         forward_left_btn = (Button) findViewById(R.id.forward_left_btn);
         forward_right_btn = (Button) findViewById(R.id.forward_right_btn);
@@ -57,7 +67,28 @@ public class MainActivity extends AppCompatActivity {
         servo1_plus = (Button) findViewById(R.id.servo1_plus);
         servo1_minus = (Button) findViewById(R.id.servo1_minus);
 
-        //OnTouchListener code for the forward button (button long press)
+        // Initialize ActivityResultLauncher for enabling Bluetooth
+        enableBluetoothLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // Bluetooth has been enabled
+                        Toast.makeText(this, "Bluetooth enabled", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // User denied enabling Bluetooth
+                        Toast.makeText(this, "Bluetooth not enabled", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Check if Bluetooth permission is granted
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            // Request the permission
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.BLUETOOTH_CONNECT},
+                    BLUETOOTH_PERMISSION_REQUEST_CODE);
+        }
+
         forward_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -86,8 +117,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
-        //OnTouchListener code for the reverse button (button long press)
         reverse_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -111,8 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        //OnTouchListener code for the forward left button (button long press)
         forward_left_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -136,8 +163,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        //OnTouchListener code for the forward right button (button long press)
         forward_right_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -161,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         servo4_minus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -185,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         servo4_plus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -209,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         servo3_minus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -233,7 +255,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         servo3_plus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -257,7 +278,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         servo2_minus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -281,7 +301,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         servo2_plus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -305,7 +324,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         servo1_minus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -329,7 +347,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         servo1_plus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -366,22 +383,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    //Initializes bluetooth module
     public boolean BTinit() {
         boolean found = false;
-
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        if (bluetoothAdapter == null) //Checks if the device supports bluetooth
-        {
-            Toast.makeText(getApplicationContext(), "Device doesn't support bluetooth", Toast.LENGTH_SHORT).show();
+        if (bluetoothAdapter == null) {
+            Toast.makeText(getApplicationContext(), "Device doesn't support Bluetooth", Toast.LENGTH_SHORT).show();
         }
 
-        if (!bluetoothAdapter.isEnabled()) //Checks if bluetooth is enabled. If not, the program will ask permission from the user to enable it
-        {
+        if (!bluetoothAdapter.isEnabled()) {
             Intent enableAdapter = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableAdapter, 0);
+            enableBluetoothLauncher.launch(enableAdapter); // Use the launcher instead of startActivityForResult()
 
             try {
                 Thread.sleep(1000);
@@ -390,19 +402,16 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        // Check and request Bluetooth permissions (as before)
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.BLUETOOTH_CONNECT},
+                    BLUETOOTH_PERMISSION_REQUEST_CODE);
+            return false;
         }
-        Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
 
-        if (bondedDevices.isEmpty()) //Checks for paired bluetooth devices
-        {
+        Set<BluetoothDevice> bondedDevices = bluetoothAdapter.getBondedDevices();
+        if (bondedDevices.isEmpty()) {
             Toast.makeText(getApplicationContext(), "Please pair the device first", Toast.LENGTH_SHORT).show();
         } else {
             for (BluetoothDevice iterator : bondedDevices) {
@@ -416,45 +425,52 @@ public class MainActivity extends AppCompatActivity {
 
         return found;
     }
-
-    public boolean BTconnect() {
+    public void BTconnect() {
         boolean connected = true;
 
         try {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+            // Request permission if not granted
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.BLUETOOTH_CONNECT},
+                            BLUETOOTH_PERMISSION_REQUEST_CODE);
+                }
+                return; // Exit here, permission will be handled in the result callback
             }
-            socket = device.createRfcommSocketToServiceRecord(PORT_UUID); //Creates a socket to handle the outgoing connection
+
+            socket = device.createRfcommSocketToServiceRecord(PORT_UUID);
             socket.connect();
 
-            Toast.makeText(getApplicationContext(),
-                    "Connection to bluetooth device successful", Toast.LENGTH_LONG).show();
-        }
-        catch(IOException e)
-        {
+            Toast.makeText(getApplicationContext(), "Connection to Bluetooth device successful", Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
             e.printStackTrace();
             connected = false;
         }
 
-        if(connected)
-        {
-            try
-            {
-                outputStream = socket.getOutputStream(); //gets the output stream of the socket
-            }
-            catch(IOException e)
-            {
+        if (connected) {
+            try {
+                outputStream = socket.getOutputStream();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        return connected;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == BLUETOOTH_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, you can proceed with Bluetooth operations
+                Toast.makeText(this, "Bluetooth permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                // Permission denied, handle appropriately
+                Toast.makeText(this, "Bluetooth permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
